@@ -1,10 +1,17 @@
 namespace SpriteKind {
     export const map = SpriteKind.create()
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    mySprite.ay = -40
+})
+controller.A.onEvent(ControllerButtonEvent.Released, function () {
+    mySprite.ay = 20
+})
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.darkGroundNorth, function (sprite, location) {
     mySprite.setVelocity(0, -1)
 })
 let mySprite: Sprite = null
+let angle = 0
 tiles.setCurrentTilemap(tilemap`level1`)
 effects.starField.startScreenEffect()
 mySprite = sprites.create(img`
@@ -49,15 +56,21 @@ mySprite = sprites.create(img`
     ...ffff..f99cc.............c999c.
     .........fffc..............cccc..
     `, SpriteKind.Player)
+let rocketengine = sprites.create(img`
+    9 3 
+    3 9 
+    `, SpriteKind.Player)
 scene.cameraFollowSprite(mySprite)
 scaling.scaleByPercent(mySprite, -25, ScaleDirection.Uniformly, ScaleAnchor.Middle)
 mySprite.ay += 20
 let myMinimap = minimap.minimap(MinimapScale.Quarter, 2, 0)
 let mySprite2 = sprites.create(minimap.getImage(myMinimap), SpriteKind.map)
 game.onUpdate(function () {
+    let mySprite3: Sprite = null
     mySprite2.destroy()
     myMinimap = minimap.minimap(MinimapScale.Quarter, 2, 0)
     minimap.includeSprite(myMinimap, mySprite, MinimapSpriteScale.MinimapScale)
     mySprite2 = sprites.create(minimap.getImage(myMinimap), SpriteKind.map)
     mySprite2.setPosition(mySprite.left, mySprite.top)
+    mySprite3.setPosition(mySprite.x, mySprite.y)
 })
