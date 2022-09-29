@@ -2,19 +2,27 @@ namespace SpriteKind {
     export const map = SpriteKind.create()
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    mySprite.ay = -40
+    apple.ay = 25 * Math.sin(angle)
+    apple.ax = 25 * Math.cos(angle)
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    angle += 30 * (3.14 / 180)
+})
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    angle += 30 * (3.14 / 180)
 })
 controller.A.onEvent(ControllerButtonEvent.Released, function () {
-    mySprite.ay = 20
+    apple.ay = 20
 })
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.darkGroundNorth, function (sprite, location) {
-    mySprite.setVelocity(0, -1)
+    apple.setVelocity(0, -1)
 })
-let mySprite: Sprite = null
+let apple: Sprite = null
 let angle = 0
+angle = 0
 tiles.setCurrentTilemap(tilemap`level1`)
 effects.starField.startScreenEffect()
-mySprite = sprites.create(img`
+apple = sprites.create(img`
     bbbb........bbbb.................
     c99bb......bb99b.................
     c999bb....bb999c.................
@@ -60,17 +68,16 @@ let rocketengine = sprites.create(img`
     9 3 
     3 9 
     `, SpriteKind.Player)
-scene.cameraFollowSprite(mySprite)
-scaling.scaleByPercent(mySprite, -25, ScaleDirection.Uniformly, ScaleAnchor.Middle)
-mySprite.ay += 20
+scene.cameraFollowSprite(apple)
+scaling.scaleByPercent(apple, -25, ScaleDirection.Uniformly, ScaleAnchor.Middle)
+apple.ay += 20
 let myMinimap = minimap.minimap(MinimapScale.Quarter, 2, 0)
-let mySprite2 = sprites.create(minimap.getImage(myMinimap), SpriteKind.map)
+let minimap2 = sprites.create(minimap.getImage(myMinimap), SpriteKind.map)
 game.onUpdate(function () {
-    let mySprite3: Sprite = null
-    mySprite2.destroy()
+    minimap2.destroy()
     myMinimap = minimap.minimap(MinimapScale.Quarter, 2, 0)
-    minimap.includeSprite(myMinimap, mySprite, MinimapSpriteScale.MinimapScale)
-    mySprite2 = sprites.create(minimap.getImage(myMinimap), SpriteKind.map)
-    mySprite2.setPosition(mySprite.left, mySprite.top)
-    mySprite3.setPosition(mySprite.x, mySprite.y)
+    minimap.includeSprite(myMinimap, apple, MinimapSpriteScale.MinimapScale)
+    minimap2 = sprites.create(minimap.getImage(myMinimap), SpriteKind.map)
+    minimap2.setPosition(apple.x - 50, apple.y - 30)
+    rocketengine.setPosition(apple.x + -8 * Math.cos(angle), apple.y + -8 * Math.sin(angle))
 })
